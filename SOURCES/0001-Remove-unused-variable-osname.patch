@@ -1,0 +1,29 @@
+From 3f9022bdfe3d720ea27cb688512b4672d26a6dd6 Mon Sep 17 00:00:00 2001
+From: Peter Hutterer <peter.hutterer@who-t.net>
+Date: Mon, 8 Oct 2018 12:55:37 +1000
+Subject: [PATCH xf86-video-v4l 1/4] Remove unused variable osname
+
+Coverity is unhappy and there's enough unhappiness in this world already, so
+let's go for the low-hanging fruit.
+
+Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+Reviewed-by: Dave Airlie <airlied@redhat.com>
+---
+ src/v4l.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/src/v4l.c b/src/v4l.c
+index 8db8f7d..0f1058e 100644
+--- a/src/v4l.c
++++ b/src/v4l.c
+@@ -86,7 +86,6 @@ _X_EXPORT XF86ModuleData v4lModuleData = { &v4lVersRec, v4lSetup, NULL };
+ static pointer
+ v4lSetup(pointer module, pointer opts, int *errmaj, int *errmin)
+ {
+-    const char *osname;
+     static Bool setupDone = FALSE;
+ 
+     if (setupDone) {
+-- 
+2.17.1
+
