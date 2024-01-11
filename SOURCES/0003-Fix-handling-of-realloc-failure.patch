@@ -1,0 +1,41 @@
+From 3370b6b6a41a27123a45b95ba4820395127c84e7 Mon Sep 17 00:00:00 2001
+From: Peter Hutterer <peter.hutterer@who-t.net>
+Date: Mon, 8 Oct 2018 13:05:09 +1000
+Subject: [PATCH xf86-video-v4l 3/4] Fix handling of realloc failure
+
+Coverity complaint and whatnot
+
+Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+Reviewed-by: Dave Airlie <airlied@redhat.com>
+---
+ src/v4l.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/src/v4l.c b/src/v4l.c
+index 583c7b8..8c2408c 100644
+--- a/src/v4l.c
++++ b/src/v4l.c
+@@ -1120,6 +1120,7 @@ V4LInit(ScrnInfoPtr pScrn, XF86VideoAdaptorPtr **adaptors)
+     XF86VideoAdaptorPtr *VAR = NULL;
+     char dev[18];
+     int  fd,i,j,d;
++    void *tmp;
+ 
+     for (i = 0, d = 0; d < MAX_V4L_DEVICES; d++) {
+         sprintf(dev, "/dev/video%d", d);
+@@ -1164,7 +1165,11 @@ V4LInit(ScrnInfoPtr pScrn, XF86VideoAdaptorPtr **adaptors)
+             return FALSE;
+ 
+         /* alloc VideoAdaptorRec */
+-        VAR = realloc(VAR,sizeof(XF86VideoAdaptorPtr)*(i+1));
++        tmp = realloc(VAR,sizeof(XF86VideoAdaptorPtr)*(i+1));
++        if (!tmp)
++            return FALSE;
++        VAR = tmp;
++
+         VAR[i] = malloc(sizeof(XF86VideoAdaptorRec));
+         if (!VAR[i])
+             return FALSE;
+-- 
+2.17.1
+
